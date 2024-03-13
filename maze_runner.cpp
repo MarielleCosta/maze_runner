@@ -124,12 +124,18 @@ bool walk(pos_t pos) {
 	 			pos.j += 1;
 	 			valid_positions.push(pos);
 			}
+			else if(maze[pos.i][pos.j+1] == 's'){
+				return true;
+			}
 		}
 		//tras
 	 	if (pos.j-1>0){
 			if(maze[pos.i][pos.j-1] == 'x'){
 	 			pos.j -= 1;
 	 			valid_positions.push(pos);
+			}
+			else if(maze[pos.i][pos.j-1] == 's'){
+				return true;
 			}
 		}
 		//baixo
@@ -138,6 +144,9 @@ bool walk(pos_t pos) {
 	 			pos.i += 1;
 	 			valid_positions.push(pos);
 			}
+			else if(maze[pos.i+1][pos.j] == 's'){
+				return true;
+			}
 		}
 		//cima
 	 	if (pos.i-1>0){
@@ -145,8 +154,10 @@ bool walk(pos_t pos) {
 	 			pos.i -= 1;
 	 			valid_positions.push(pos);
 			}
+			else if(maze[pos.i-1][pos.j] == 's'){
+				return true;
+			}
 		}
-	
 	
 		// Verifica se a pilha de posições nao esta vazia 
 		//Caso não esteja, pegar o primeiro valor de  valid_positions, remove-lo e chamar a funçao walk com esse valor
@@ -154,6 +165,7 @@ bool walk(pos_t pos) {
 		if (!valid_positions.empty()) {
 			pos_t next_position = valid_positions.top();
 			valid_positions.pop();
+			walk(next_position);
 		}
 	return false;
 }
@@ -163,11 +175,10 @@ int main(int argc, char* argv[]) {
 	pos_t initial_pos = load_maze("../data/maze.txt");
 	// chamar a função de navegação
 	
-	print_maze();
-	
 	bool exit_found = walk(initial_pos);
 	
 	// Tratar o retorno (imprimir mensagem)
+	print_maze();
 	
 	return 0;
 }
