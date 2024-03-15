@@ -103,7 +103,7 @@ bool walk(pos_t pos) {
 		// Marcar a posição atual com o símbolo '.'
 		maze[pos.i][pos.j] = '.';
 		// Limpa a tela
-		system("cls");
+		system("clear");
 		// Imprime o labirinto
 		print_maze();
 		
@@ -121,18 +121,22 @@ bool walk(pos_t pos) {
 		//frente
 	 	if (pos.j+1<num_cols){
 			if(maze[pos.i][pos.j+1] == 'x'){
-	 			pos.j += 1;
-	 			valid_positions.push(pos);
+				pos_t newpos;
+				newpos.i = pos.i;
+				newpos.j = pos.j +1;
+				valid_positions.push(newpos);
 			}
 			else if(maze[pos.i][pos.j+1] == 's'){
 				return true;
 			}
 		}
 		//tras
-	 	if (pos.j-1>0){
+	 	if (pos.j-1>=0){
 			if(maze[pos.i][pos.j-1] == 'x'){
-	 			pos.j -= 1;
-	 			valid_positions.push(pos);
+				pos_t newpos;
+				newpos.i = pos.i;
+				newpos.j = pos.j -1;
+				valid_positions.push(newpos);
 			}
 			else if(maze[pos.i][pos.j-1] == 's'){
 				return true;
@@ -141,18 +145,23 @@ bool walk(pos_t pos) {
 		//baixo
 	 	if (pos.i+1<num_rows){
 			if(maze[pos.i+1][pos.j] == 'x'){
-	 			pos.i += 1;
-	 			valid_positions.push(pos);
+				pos_t newpos;
+				newpos.j = pos.j;
+				newpos.i = pos.i +1;
+				valid_positions.push(newpos);
 			}
 			else if(maze[pos.i+1][pos.j] == 's'){
 				return true;
 			}
 		}
 		//cima
-	 	if (pos.i-1>0){
+	 	if (pos.i-1>=0){
 			if(maze[pos.i-1][pos.j] == 'x'){
-	 			pos.i -= 1;
-	 			valid_positions.push(pos);
+				pos_t newpos;
+				newpos.j = pos.j;
+				newpos.i = pos.i -1;
+				valid_positions.push(newpos);
+				
 			}
 			else if(maze[pos.i-1][pos.j] == 's'){
 				return true;
@@ -172,13 +181,15 @@ bool walk(pos_t pos) {
 
 int main(int argc, char* argv[]) {
 	// carregar o labirinto com o nome do arquivo recebido como argumento
-	pos_t initial_pos = load_maze("../data/maze.txt");
+	pos_t initial_pos = load_maze("../data/maze7.txt");
 	// chamar a função de navegação
 	
 	bool exit_found = walk(initial_pos);
 	
 	// Tratar o retorno (imprimir mensagem)
+	system("clear");
 	print_maze();
+	printf("Saída encontrada!\n");
 	
 	return 0;
 }
