@@ -101,104 +101,103 @@ void print_maze() {
 bool walk(pos_t pos) {
 	
 	// Repita até que a saída seja encontrada ou não existam mais posições não exploradas
-		// Marcar a posição atual com o símbolo '.'
-		maze[pos.i][pos.j] = 'o';
-		// Limpa a tela
-		system("clear");
-		// Imprime o labirinto
-		print_maze();
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		
-		/* Dado a posição atual, verifica quais sao as próximas posições válidas
-			Checar se as posições abaixo são validas (i>0, i<num_rows, j>0, j <num_cols)
-		 	e se são posições ainda não visitadas (ou seja, caracter 'x') e inserir
-		 	cada uma delas no vetor valid_positions
-		 		- pos.i, pos.j+1 (frente)
-		 		- pos.i, pos.j-1 (tras)
-		 		- pos.i+1, pos.j (baixo)
-		 		- pos.i-1, pos.j (cima)
-		 	Caso alguma das posiçÕes validas seja igual a 's', retornar verdadeiro
-	 	*/
-	 	
-		//frente
-	 	if (pos.j+1<num_cols){
-			if((maze[pos.i][pos.j+1] == 'x') && (maze[pos.i][pos.j+1] != '.')){
-				pos_t newpos;
-				newpos.i = pos.i;
-				newpos.j = pos.j +1;
-				valid_positions.push(newpos);
-			}
-			else if(maze[pos.i][pos.j+1] == 's'){
-				return true;
-			}
-		}
-		//tras
-	 	if (pos.j-1>=0){
-			if((maze[pos.i][pos.j-1] == 'x') && (maze[pos.i][pos.j-1] != '.')){
-				pos_t newpos;
-				newpos.i = pos.i;
-				newpos.j = pos.j -1;
-				valid_positions.push(newpos);
-			}
-			else if(maze[pos.i][pos.j-1] == 's'){
-				return true;
-			}
-		}
-		//baixo
-	 	if (pos.i+1<num_rows){
-			if((maze[pos.i+1][pos.j] == 'x') && (maze[pos.i+1][pos.j] != '.')){
-				pos_t newpos;
-				newpos.j = pos.j;
-				newpos.i = pos.i +1;
-				valid_positions.push(newpos);
-			}
-			else if(maze[pos.i+1][pos.j] == 's'){
-				return true;
-			}
-		}
-		//cima
-	 	if (pos.i-1>=0){
-			if((maze[pos.i-1][pos.j] == 'x') && (maze[pos.i-1][pos.j] != '.')){
-				pos_t newpos;
-				newpos.j = pos.j;
-				newpos.i = pos.i -1;
-				valid_positions.push(newpos);
-				
-			}
-			else if(maze[pos.i-1][pos.j] == 's'){
-				return true;
-			}
-		}
+	// Marcar a posição atual com o símbolo '.'
+	maze[pos.i][pos.j] = 'o';
+	// Limpa a tela
+	system("clear");
+	// Imprime o labirinto
+	print_maze();
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	
-		// Verifica se a pilha de posições nao esta vazia 
-		//Caso não esteja, pegar o primeiro valor de  valid_positions, remove-lo e chamar a funçao walk com esse valor
-		// Caso contrario, retornar falso
-		if (!valid_positions.empty()) {
-			if(valid_positions.size() >= 1){	
-				pos_t next_position = valid_positions.top();
-				while(maze[next_position.i][next_position.j] == '.'){
-					if(valid_positions.size()> 1){
-						valid_positions.pop();
-						next_position = valid_positions.top();
-					}
-					else{
-						return false;
-					}
-				}
-				maze[pos.i][pos.j] = '.';
-				if(valid_positions.size() >= 1){
+	/* Dado a posição atual, verifica quais sao as próximas posições válidas
+		Checar se as posições abaixo são validas (i>0, i<num_rows, j>0, j <num_cols)
+		e se são posições ainda não visitadas (ou seja, caracter 'x') e inserir
+		cada uma delas no vetor valid_positions
+			- pos.i, pos.j+1 (frente)
+			- pos.i, pos.j-1 (tras)
+			- pos.i+1, pos.j (baixo)
+			- pos.i-1, pos.j (cima)
+		Caso alguma das posiçÕes validas seja igual a 's', retornar verdadeiro
+	*/
+	
+	//frente
+	if (pos.j+1<num_cols){
+		if((maze[pos.i][pos.j+1] == 'x') && (maze[pos.i][pos.j+1] != '.')){
+			pos_t newpos;
+			newpos.i = pos.i;
+			newpos.j = pos.j +1;
+			valid_positions.push(newpos);
+		}
+		else if(maze[pos.i][pos.j+1] == 's'){
+			return true;
+		}
+	}
+	//tras
+	if (pos.j-1>=0){
+		if((maze[pos.i][pos.j-1] == 'x') && (maze[pos.i][pos.j-1] != '.')){
+			pos_t newpos;
+			newpos.i = pos.i;
+			newpos.j = pos.j -1;
+			valid_positions.push(newpos);
+		}
+		else if(maze[pos.i][pos.j-1] == 's'){
+			return true;
+		}
+	}
+	//baixo
+	if (pos.i+1<num_rows){
+		if((maze[pos.i+1][pos.j] == 'x') && (maze[pos.i+1][pos.j] != '.')){
+			pos_t newpos;
+			newpos.j = pos.j;
+			newpos.i = pos.i +1;
+			valid_positions.push(newpos);
+		}
+		else if(maze[pos.i+1][pos.j] == 's'){
+			return true;
+		}
+	}
+	//cima
+	if (pos.i-1>=0){
+		if((maze[pos.i-1][pos.j] == 'x') && (maze[pos.i-1][pos.j] != '.')){
+			pos_t newpos;
+			newpos.j = pos.j;
+			newpos.i = pos.i -1;
+			valid_positions.push(newpos);
+			
+		}
+		else if(maze[pos.i-1][pos.j] == 's'){
+			return true;
+		}
+	}
+
+	// Verifica se a pilha de posições nao esta vazia 
+	//Caso não esteja, pegar o primeiro valor de  valid_positions, remove-lo e chamar a funçao walk com esse valor
+	// Caso contrario, retornar falso
+	if (!valid_positions.empty()) {
+		if(valid_positions.size() >= 1){	
+			pos_t next_position = valid_positions.top();
+			while(maze[next_position.i][next_position.j] == '.'){
+				if(valid_positions.size()> 1){
 					valid_positions.pop();
-					walk(next_position);
+					next_position = valid_positions.top();
 				}
 				else{
 					return false;
 				}
 			}
+			maze[pos.i][pos.j] = '.';
+			if(valid_positions.size() >= 1){
+				valid_positions.pop();
+				walk(next_position);
+			}
 			else{
 				return false;
 			}
 		}
-	return false;
+		else{
+			return false;
+		}
+	}
 }
 
 int main(int argc, char* argv[]) {
