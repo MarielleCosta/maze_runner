@@ -94,7 +94,7 @@ void print_maze() {
         printf("\n");
     }
     
-    this_thread::sleep_for(chrono::milliseconds(100));
+    this_thread::sleep_for(chrono::milliseconds(300));
 }
 
 // Função responsável pela navegação
@@ -107,7 +107,7 @@ void walk(pos_t pos) {
         valid_positions.pop();
         maze[pos.i][pos.j] = 'o';
 
-        this_thread::sleep_for(chrono::milliseconds(100));
+        this_thread::sleep_for(chrono::milliseconds(200));
 
         maze[pos.i][pos.j] = '.';
 
@@ -170,7 +170,7 @@ void walk(pos_t pos) {
 
 int main(int argc, char* argv[]) {
     // Carrega o labirinto com o nome do arquivo recebido como argumento
-    pos_t initial_pos = load_maze("../data/maze4.txt");
+    pos_t initial_pos = load_maze("../data/maze5.txt");
 
     // Cria thread detached passando a função de navegação
     thread tmain(walk, initial_pos);
