@@ -15,6 +15,9 @@ int num_cols;
 
 // Variável global de saída encontrada
 bool exit_found = false;
+int count_threads = 0;
+int count_exit = 0;
+int count_input = 0;
 
 // Representação de uma posição
 struct pos_t {
@@ -72,12 +75,25 @@ pos_t load_maze(const char* file_name) {
 
 // Função que imprime o labirinto
 void print_maze() {
+    count_threads = 0;
+    count_exit = 0;
+    count_input = 0;
     for (int i = 0; i < num_rows; ++i) {
         for (int j = 0; j < num_cols; ++j) {
             	printf("%c", maze[i][j]);
+                if(maze[i][j] == 'o'){
+                    count_threads++;
+                }
+                else if(maze[i][j] == 's'){
+                    count_exit++;
+                }
+                else if(maze[i][j] == 'e'){
+                    count_input++;
+                }
         }
         printf("\n");
     }
+    
     this_thread::sleep_for(chrono::milliseconds(100));
 }
 
@@ -91,18 +107,15 @@ void walk(pos_t pos) {
         valid_positions.pop();
         maze[pos.i][pos.j] = 'o';
 
-        // Delay de 50 ms para melhor visualização
         this_thread::sleep_for(chrono::milliseconds(100));
 
         maze[pos.i][pos.j] = '.';
 
 		// frente
         if (pos.j + 1 < num_cols) {
-            // Verifica se a saída foi encontrada à direita
             if (maze[pos.i][pos.j + 1] == 's') {
                 maze[pos.i][pos.j] = 'o';
                 exit_found = true;
-            // Verifica se a próxima posição à direita é válida
             } else if (maze[pos.i][pos.j + 1] == 'x') {
                 newpos.i = pos.i;
 				newpos.j = pos.j + 1;
@@ -112,11 +125,9 @@ void walk(pos_t pos) {
 
         // trás
         if (pos.j - 1 >= 0) {
-            // Verifica se a saída foi encontrada à esquerda
             if (maze[pos.i][pos.j - 1] == 's') {
                 maze[pos.i][pos.j] = 'o';
                 exit_found = true;
-            // Verifica se a próxima posição à esquerda é válida
             } else if (maze[pos.i][pos.j - 1] == 'x') {
                 newpos.i = pos.i;
 				newpos.j = pos.j - 1;
@@ -126,11 +137,9 @@ void walk(pos_t pos) {
 
         // baixo
         if (pos.i + 1 < num_rows) {
-            // Verifica se a saída foi encontrada abaixo
             if (maze[pos.i + 1][pos.j] == 's') {
                 maze[pos.i][pos.j] = 'o';
                 exit_found = true;
-            // Verifica se a próxima posição abaixo é válida
             } else if (maze[pos.i + 1][pos.j] == 'x') {
                 newpos.j = pos.j;
 				newpos.i = pos.i + 1;
@@ -140,11 +149,9 @@ void walk(pos_t pos) {
 
         // cima
         if (pos.i - 1 >= 0) {
-            // Verifica se a saída foi encontrada acima
             if (maze[pos.i - 1][pos.j] == 's') {
                 maze[pos.i][pos.j] = 'o';
                 exit_found = true;
-            // Verifica se a próxima posição acima é válida
             } else if (maze[pos.i - 1][pos.j] == 'x') {
                 newpos.j = pos.j;
 				newpos.i = pos.i - 1;
@@ -163,7 +170,7 @@ void walk(pos_t pos) {
 
 int main(int argc, char* argv[]) {
     // Carrega o labirinto com o nome do arquivo recebido como argumento
-    pos_t initial_pos = load_maze("../data/maze3.txt");
+    pos_t initial_pos = load_maze("../data/maze4.txt");
 
     // Cria thread detached passando a função de navegação
     thread tmain(walk, initial_pos);
@@ -172,13 +179,16 @@ int main(int argc, char* argv[]) {
     while (!exit_found) {
         print_maze();
         system("clear");
+        if ((count_threads == 0) && (count_exit == 0) && (count_input == 0)){
+            break;
+        }
     }
 
     print_maze();
     if(exit_found){
 		printf("Saída encontrada!\n");
 	}
-	else{
+	else if((!exit_found) || ((count_threads == 0) && (count_exit == 0))){
 		printf("Saída não encontrada!\n");
 	}
 
